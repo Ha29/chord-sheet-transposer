@@ -89,7 +89,7 @@ def find_slash_notes(Lines, transpose_num):
         char = line[idx]
         try:
           if char == '/' and idx + 2 <= len(line) - 1:
-            print('linehere: ', line)
+            # print('linehere: ', line)
             if line[idx + 1] in notes_dict and line[idx + 2] in ['b', '#']:
               note_idx = notes_dict[line[idx + 1] + line[idx + 2]]
               note_idx = (note_idx + transpose_num) % 12
