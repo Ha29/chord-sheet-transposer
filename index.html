@@ -117,11 +117,12 @@
     while (idx < line.length) {
       let char = line[idx]
       if (char == '/' && idx + 1 <= line.length - 1 && line[idx + 1] in notes_dict) {
-          let note_idx = notes_dict[line[idx + 1]]
+          let note = line[idx + 1]
           if (idx + 2 <= line.length - 1 && ['b', '#'].includes(line[idx + 2])) {
-            note_idx += line[idx + 2]
+            note += line[idx + 2]
             idx += 1
           }
+          let note_idx = notes_dict[note]
           note_idx = (note_idx + transpose_num) % 12
           processed_line += '/' + get_correct_sharp_flat_note(notes_dict[note_idx], use_flat)
           idx += 2
