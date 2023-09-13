@@ -8,7 +8,19 @@ function set_output() {
 //create input for key of song
 
 //create notes array
-
+notes_array = 'C Db D Eb E F Gb G Ab A Bb B'.split(' ')
+notes_dict = {}
+notes_array.forEach((note, idx) => {
+  notes_dict[idx] = note
+  notes_dict[note] = idx
+});
+notes_dict['C#'] = 1
+notes_dict['D#'] = 3
+notes_dict['F#'] = 6
+notes_dict['G#'] = 8
+notes_dict['A#'] = 10
+console.log(notes_dict)
+    
 //make new key and determine if flats or sharps are used 
 
 //make valid chord function
