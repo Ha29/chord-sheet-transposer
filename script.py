@@ -53,7 +53,7 @@ def find_main_chord(Lines, transpose_num):
           transcribed_line += ' '
           continue
         elif chord == '|' or not valid_chord(chord):
-          transcribed_line += chord
+          transcribed_line += chord + ' '
           continue
         has_sharp_flat = False
         if len(chord) >= 1 and chord != '|':
