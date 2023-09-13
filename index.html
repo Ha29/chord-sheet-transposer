@@ -33,7 +33,7 @@ console.log(notes_dict)
 </script>
 
 <h1>Put music in textbox</h1>
-<form onsubmit="return doSomething()">
+<form onsubmit="return set_output()">
   <label for="tranpose_num">Transpose By How Much (Positive):</label>
   <input type="number" id="transpose_num" name="transpose_num"><br><br>
     
@@ -45,6 +45,6 @@ console.log(notes_dict)
   <input type="submit" value="Submit">
 </form>
 
-<textarea id="outputp">
+<textarea id="outputp" rows="7" cols="50">
     Output: 
 </textarea>
