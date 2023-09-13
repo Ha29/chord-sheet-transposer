@@ -1,133 +1,133 @@
 <script>
 
 
-//create numeric input for transposing by how much 
-//create input for key of song
-
-//create notes array
-var notes_array = 'C Db D Eb E F Gb G Ab A Bb B'.split(' ')
-var notes_dict = {}
-notes_array.forEach((note, idx) => {
-  notes_dict[idx] = note
-  notes_dict[note] = idx
-});
-notes_dict['C#'] = 1
-notes_dict['D#'] = 3
-notes_dict['F#'] = 6
-notes_dict['G#'] = 8
-notes_dict['A#'] = 10
-console.log(notes_dict)
-
-function get_config() {
-    var transpose_num = parseInt(document.getElementById('transpose_num').value) % 12
-    
-    //make new key and determine if flats or sharps are used 
-    var music_key = document.getElementById('musickey').value
-    if (!(curr_key in notes_dict)) {
-        music_key = 'C'
-    }
-    var new_transpose_key = notes_dict[music_key] + transpose_num
-    var new_key = notes_dict[new_transpose_key]
-    var use_flat = false
-    if (new_key.includes('b')) {
-        use_flat = true
-    }
-    return {transpose_num, music_key, new_key, use_flat}
-}
-    
-function get_correct_sharp_flat_note(note, use_flat=false) {
-    if (use_flat) {
-        return note
-    }
-    if (note in notes_dict && note.includes('b')) {
-        switch (note) {
-            case 'Db':
-                return 'C#'
-            case 'Eb':
-                return 'D#'
-            case 'Gb':
-                return 'F#'
-            case 'Ab':
-                return 'G#'
-            case 'Bb':
-                return 'A#'
-            default:
-                return note
-    }
-    return note
-}
-    
-//make valid chord function
-function valid_chord(chord) {
-    return chord.length >= 1 && chord[0] in notes_dict
-}
-
-function process_chord(chord, transpose_num, use_flat) {
-    if (chord == '') {
-        return ' '
-    } else if (chord == '|' || !valid_chord(chord)) {
-        return chord + ' '
-    }
-    has_sharp_flat = false
-    if (chord.length >= 1) {
-        let chord_note = chord[0]
-        if (chord.length > 1 && (chord[1] == '#' || chord[1] == 'b')) {
-            chord_note += chord[1]
-            has_sharp_flat = true
-        }
-        let note_idx = notes_dict[chord_note]
-        if (!note_idx) {
-            return chord
-        }
-        note_idx = (note_idx + transpose_num) % 12
-        let new_note = get_correct_sharp_flat_note(notes_dict[note_idx], use_flat)
-        if (has_sharp_flat) {
-            new_note += chord.slice(2, chord.length)
-        } else {
-            new_note += chord.slice(1, chord.length)
-        }
-        return new_note
-    } else {
-        return chord
-    }
-}
-    
-function process_line(line, transpose_num, use_flat) {
-    let processed_line = ''
-    let curr_line = line.split(' ')
-    for (let chord of curr_line) {
-        processed_line += process_chord(chord)
-    }
-    return processed_line
-}
-
-//transcribe main chords function
-function find_main_chord(lines, transpose_num, use_flat) {
-    var new_lines = []
-    for (let line of lines) {
-        let transcribed_line = ''
-        if (line.includes('|')) {
-            transcribed_line += process_line(line)
-            new_lines += [transcribed_line]
-        } else {
-            new_lines += [line]
-        }
-    }
-    return new_lines
-}
-    
-//transcribe slash chords function
-function find_slash_notes(lines, transpose_num, use_flat) {
-}
-    
-//set the output 
-function set_output() {
-    var musicText = document.getElementById('outputp').innerHTML = document.getElementById('musicinput').value
-    var config  = getConfig()
-    var newlines = find_main_chord(musicText.split("\n"), config['transpose_num'], config['use_flat'])
-    console.log(newlines)
-    return false;
-}
+  //create numeric input for transposing by how much 
+  //create input for key of song
+  
+  //create notes array
+  var notes_array = 'C Db D Eb E F Gb G Ab A Bb B'.split(' ')
+  var notes_dict = {}
+  notes_array.forEach((note, idx) => {
+    notes_dict[idx] = note
+    notes_dict[note] = idx
+  });
+  notes_dict['C#'] = 1
+  notes_dict['D#'] = 3
+  notes_dict['F#'] = 6
+  notes_dict['G#'] = 8
+  notes_dict['A#'] = 10
+  console.log(notes_dict)
+  
+  function get_config() {
+      var transpose_num = parseInt(document.getElementById('transpose_num').value) % 12
+      
+      //make new key and determine if flats or sharps are used 
+      var music_key = document.getElementById('musickey').value
+      if (!(curr_key in notes_dict)) {
+          music_key = 'C'
+      }
+      var new_transpose_key = notes_dict[music_key] + transpose_num
+      var new_key = notes_dict[new_transpose_key]
+      var use_flat = false
+      if (new_key.includes('b')) {
+          use_flat = true
+      }
+      return {transpose_num, music_key, new_key, use_flat}
+  }
+      
+  function get_correct_sharp_flat_note(note, use_flat=false) {
+      if (use_flat) {
+          return note
+      }
+      if (note in notes_dict && note.includes('b')) {
+          switch (note) {
+              case 'Db':
+                  return 'C#'
+              case 'Eb':
+                  return 'D#'
+              case 'Gb':
+                  return 'F#'
+              case 'Ab':
+                  return 'G#'
+              case 'Bb':
+                  return 'A#'
+              default:
+                  return note
+      }
+      return note
+  }
+      
+  //make valid chord function
+  function valid_chord(chord) {
+      return chord.length >= 1 && chord[0] in notes_dict
+  }
+  
+  function process_chord(chord, transpose_num, use_flat) {
+      if (chord == '') {
+          return ' '
+      } else if (chord == '|' || !valid_chord(chord)) {
+          return chord + ' '
+      }
+      has_sharp_flat = false
+      if (chord.length >= 1) {
+          let chord_note = chord[0]
+          if (chord.length > 1 && (chord[1] == '#' || chord[1] == 'b')) {
+              chord_note += chord[1]
+              has_sharp_flat = true
+          }
+          let note_idx = notes_dict[chord_note]
+          if (!note_idx) {
+              return chord
+          }
+          note_idx = (note_idx + transpose_num) % 12
+          let new_note = get_correct_sharp_flat_note(notes_dict[note_idx], use_flat)
+          if (has_sharp_flat) {
+              new_note += chord.slice(2, chord.length)
+          } else {
+              new_note += chord.slice(1, chord.length)
+          }
+          return new_note
+      } else {
+          return chord
+      }
+  }
+      
+  function process_line(line, transpose_num, use_flat) {
+      let processed_line = ''
+      let curr_line = line.split(' ')
+      for (let chord of curr_line) {
+          processed_line += process_chord(chord)
+      }
+      return processed_line
+  }
+  
+  //transcribe main chords function
+  function find_main_chord(lines, transpose_num, use_flat) {
+      var new_lines = []
+      for (let line of lines) {
+          let transcribed_line = ''
+          if (line.includes('|')) {
+              transcribed_line += process_line(line)
+              new_lines += [transcribed_line]
+          } else {
+              new_lines += [line]
+          }
+      }
+      return new_lines
+  }
+      
+  //transcribe slash chords function
+  function find_slash_notes(lines, transpose_num, use_flat) {
+  }
+      
+  //set the output 
+  function set_output() {
+      var musicText = document.getElementById('outputp').innerHTML = document.getElementById('musicinput').value
+      var config  = getConfig()
+      var newlines = find_main_chord(musicText.split("\n"), config['transpose_num'], config['use_flat'])
+      console.log(newlines)
+      return false;
+  }
     
 //make a copy text button and function 
 </script>
