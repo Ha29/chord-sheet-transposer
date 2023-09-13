@@ -1,8 +1,18 @@
 transpose_num = input("Transpose by how much? (positive number), 11 is -1, 10 is -2, etc.:\n")
 if not transpose_num.isnumeric():
   raise Exception("Need positive numeric input")
+
+input_file_name = input("What is your filename (default: myfile.txt) (Only alphanumeric a-zA-Z0-9)?\n")
+
+cleaned_file_name = ''.join(c for c in input_file_name.split('.')[0] if c.isalnum())
+
+if input_file_name == '':
+  input_file_name = 'myfile.txt'
+elif len(input_file_name.split('.')) > 1:
+  ext = input_file_name.split('.')[-1]
+
 # Using readlines()
-file1 = open('myfile.txt', 'r')
+file1 = open(input_file_name, 'r')
 fileLines = file1.readlines()
 
 # 0 - 11 are the indices, mod 12 the transpose num
@@ -16,7 +26,6 @@ notes_dict['D#'] = 3
 notes_dict['F#'] = 6
 notes_dict['G#'] = 8
 notes_dict['A#'] = 10
-print(notes_dict[11])
 
 #counts spaces up until a string match
 def space_counter(string, string_to_match):
@@ -74,7 +83,7 @@ def find_main_chord(Lines, transpose_num):
           except KeyError:
             print('note does not exist: ', chord_note)
             continue
-      new_lines += [transcribed_line + '\n']
+      new_lines += [transcribed_line]
     else:
       new_lines += [line]
   return new_lines
@@ -129,5 +138,6 @@ new_lines = find_main_chord(fileLines, int(transpose_num))
 new_lines = find_slash_notes(new_lines, int(transpose_num))
   # print(new_lines)
 
-file2 = open('myfileout.txt', 'w+')
+file2 = open(input_file_name.split('.')[0] + '_transposed' + str(transpose_num) + '.txt', 'w+')
 file2.writelines(new_lines)
+print('outputted at ', input_file_name.split('.')[0] + '_transposed' + str(transpose_num) + '.txt')
