@@ -123,7 +123,7 @@
             idx += 1
           }
           note_idx = (note_idx + transpose_num) % 12
-          processed_line += '/' + get_correct_sharp_flat_note(notes_dict[note_idx])
+          processed_line += '/' + get_correct_sharp_flat_note(notes_dict[note_idx], use_flat)
           idx += 2
           continue
       }
@@ -169,6 +169,7 @@
   function set_output() {
       var musicText = document.getElementById('musicinput').value
       var config  = get_config()
+      console.log('config: ', config)
       var newlines = find_main_chord(musicText.split("\n"), config['transpose_num'], config['use_flat'])
       newlines = find_slash_notes(newlines.split('\n'), config['transpose_num'], config['use_flat'])
       document.getElementById('newmusickey').textContent = config['new_key']
@@ -205,7 +206,7 @@
 <h1>Output:</h1>
 <textarea id="outputp" rows="7" cols="50">
 </textarea>
-<button onclick="copyOutput()">Copy Output</button>
 
 <p>Key Output: <span id="newmusickey"></span></p>
 
+<button onclick="copyOutput()">Copy Output</button>
