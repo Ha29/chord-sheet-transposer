@@ -1,5 +1,13 @@
+<script>
+function doSomething() {
+    alert('Form submitted!');
+    console.log('working!');
+    return false;
+}
+</script>
+
 <h1>Put music in textbox</h1>
-<form>
+<form onsubmit="return doSomething()">
   <textarea id="musicinput" rows"4" cols="50"></textarea>
   <input type="submit" value="Submit">
 </form>
