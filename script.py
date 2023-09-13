@@ -27,6 +27,31 @@ notes_dict['F#'] = 6
 notes_dict['G#'] = 8
 notes_dict['A#'] = 10
 
+music_key = input("What is the key of the song? (default: C) (Use major key and only the letter and sharp or flat, don't put C major, C# or Db is okay)\n")
+if music_key not in notes_dict:
+  print('Invalid music key, using C\n')
+  music_key = 'C'  
+new_transpose_key = notes_dict[music_key] + int(transpose_num) % 12
+new_key = notes_dict[new_transpose_key]
+
+use_flat = False
+if 'b' in new_key:
+  use_flat = True
+
+def get_correct_sharp_flat_note(note, use_flat=False):
+  if use_flat:
+    return note
+  if note in notes_dict and 'b' in note:
+    if note == 'Db':
+      return 'C#'
+    elif note == 'Eb':
+      return 'D#'
+    elif note == 'Gb':
+      return 'F#'
+    elif note == 'Bb':
+      return 'A#'
+  return note
+
 #counts spaces up until a string match
 def space_counter(string, string_to_match):
   count = 0
@@ -75,6 +100,7 @@ def find_main_chord(Lines, transpose_num):
           try:
             note_idx = notes_dict[chord_note]
             note_idx = (note_idx + transpose_num) % 12
+            new_note = get_correct_sharp_flat_note(notes_dict[note_idx], use_flat)
             if has_sharp_flat:
               new_note = notes_dict[note_idx] + chord[2:]
             else:
@@ -102,13 +128,13 @@ def find_slash_notes(Lines, transpose_num):
             if line[idx + 1] in notes_dict and line[idx + 2] in ['b', '#']:
               note_idx = notes_dict[line[idx + 1] + line[idx + 2]]
               note_idx = (note_idx + transpose_num) % 12
-              transcribed_line += '/' + notes_dict[note_idx]
+              transcribed_line += '/' + get_correct_sharp_flat_note(notes_dict[note_idx], use_flat)
               idx += 3
               continue
             elif line[idx + 1] in notes_dict:
               note_idx = notes_dict[line[idx + 1]]
               note_idx = (note_idx + transpose_num) % 12
-              transcribed_line += '/' + notes_dict[note_idx]
+              transcribed_line += '/' + get_correct_sharp_flat_note(notes_dict[note_idx], use_flat)
               idx += 2
               continue
             else:
@@ -117,7 +143,7 @@ def find_slash_notes(Lines, transpose_num):
             if line[idx + 1] in notes_dict:
               note_idx = notes_dict[line[idx + 1]]
               note_idx = (note_idx + transpose_num) % 12
-              transcribed_line += '/' + notes_dict[note_idx]
+              transcribed_line += '/' + get_correct_sharp_flat_note(notes_dict[note_idx], use_flat)
               idx += 2
               continue
             else:
@@ -138,6 +164,6 @@ new_lines = find_main_chord(fileLines, int(transpose_num))
 new_lines = find_slash_notes(new_lines, int(transpose_num))
   # print(new_lines)
 
-file2 = open(input_file_name.split('.')[0] + '_transposed' + str(transpose_num) + '.txt', 'w+')
+file2 = open(input_file_name.split('.')[0] + '_transposedtoKeyOf' + str(new_key) + '.txt', 'w+')
 file2.writelines(new_lines)
-print('outputted at ', input_file_name.split('.')[0] + '_transposed' + str(transpose_num) + '.txt')
+print('outputted at ', input_file_name.split('.')[0] + '_transposedtoKeyOf' + str(new_key) + '.txt')
