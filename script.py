@@ -102,9 +102,9 @@ def find_main_chord(Lines, transpose_num):
             note_idx = (note_idx + transpose_num) % 12
             new_note = get_correct_sharp_flat_note(notes_dict[note_idx], use_flat)
             if has_sharp_flat:
-              new_note = notes_dict[note_idx] + chord[2:]
+              new_note += chord[2:]
             else:
-              new_note = notes_dict[note_idx] + chord[1:]
+              new_note += chord[1:]
             transcribed_line += new_note
           except KeyError:
             print('note does not exist: ', chord_note)
