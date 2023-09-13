@@ -95,8 +95,9 @@ function process_chord(chord, transpose_num, use_flat) {
 function process_line(line, transpose_num, use_flat) {
     let processed_line = ''
     let curr_line = line.split(' ')
-    for (let chord of curr_line):
+    for (let chord of curr_line) {
         processed_line += process_chord(chord)
+    }
     return processed_line
 }
 
