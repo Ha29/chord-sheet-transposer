@@ -21,18 +21,102 @@ notes_dict['G#'] = 8
 notes_dict['A#'] = 10
 console.log(notes_dict)
 
-var transpose_num = document.getElementById('transpose_num').value % 12
+var transpose_num = parseInt(document.getElementById('transpose_num').value) % 12
     
 //make new key and determine if flats or sharps are used 
-
+var music_key = document.getElementById('musickey').value
+if (!(curr_key in notes_dict)) {
+    music_key = 'C'
+}
+var new_transpose_key = notes_dict[music_key] + transpose_num
+var new_key = notes_dict[new_transpose_key]
+var use_flat = false
+if (new_key.includes('b')) {
+    use_flat = true
+}
+    
+function get_correct_sharp_flat_note(note, use_flat=false) {
+    if (use_flat) {
+        return note
+    }
+    if (note in notes_dict and note.includes('b')) {
+        switch (note) {
+            case 'Db':
+                return 'C#'
+            case 'Eb':
+                return 'D#'
+            case 'Gb':
+                return 'F#'
+            case 'Ab':
+                return 'G#'
+            case 'Bb':
+                return 'A#'
+            default:
+                return note
+    }
+    return note
+}
+    
 //make valid chord function
+function valid_chord(chord) {
+    return chord.length >= 1 && chord[0] in notes_dict
+}
+
+function process_chord(chord) {
+    if (chord == '') {
+        return ' '
+    } else if (chord == '|' || !valid_chord(chord)) {
+        return chord + ' '
+    }
+    has_sharp_flat = false
+    if (chord.length >= 1) {
+        let chord_note = chord[0]
+        if (chord.length > 1 && (chord[1] == '#' || chord[1] == 'b')) {
+            chord_note += chord[1]
+            has_sharp_flat = true
+        }
+        try {
+            let note_idx = notes_dict[chord_note]
+            note_idx = (note_idx + transpose_num) % 12
+            new_note = get_correct_sharp_flat_note(notes_dict[note_idx], use_flat)
+            if (has_sharp_flat) {
+            }
+        } catch (e) {
+        
+        }
+    }
+}
+    
+function process_line(line) {
+    let processed_line = ''
+    let curr_line = line.split(' ')
+    for chord in curr_line:
+        processed_line += process_chord(chord)
+    return processed_line
+}
 
 //transcribe main chords function
-
+function find_main_chord(lines, transpose_num) {
+    var new_lines = []
+    for (let line of lines) {
+        let transcribed_line = ''
+        if (line.includes('|')) {
+            transcribed_line += process_line(line)
+            new_lines += [transcribed_line]
+        } else {
+            new_lines += [line]
+        }
+    }
+    return new_lines
+}
+    
 //transcribe slash chords function
-
+function find_slash_notes(lines, transpose_num) {
+}
+    
 //set the output 
 
+    
 //make a copy text button and function 
 </script>
 
