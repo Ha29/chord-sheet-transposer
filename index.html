@@ -176,6 +176,8 @@
       document.getElementById('newmusickey').textContent = config['new_key']
       console.log('newkey: ', config['new_key'])
       // console.log(newlines)
+      document.getElementById('musickey').value = config['music_key']
+      document.getElementById('outputp').hidden = false
       document.getElementById('outputp').value = newlines
       return false;
   }
@@ -196,7 +198,7 @@
   <label for="tranpose_num">Transpose By How Much (Positive):</label>
   <input type="number" id="transpose_num" name="transpose_num" required><br><br>
     
-  <label for="musickey">Music Key:</label>
+  <label for="musickey">Original Music Key (default to C):</label>
   <input type="text" id="musickey" name="musickey"><br><br>
 
   <label for="musicinput">Song To Transcribe:</label>
@@ -205,7 +207,7 @@
 </form>
 
 <h1>Output:</h1>
-<textarea id="outputp" rows="7" cols="50">
+<textarea id="outputp" rows="7" cols="50" hidden>
 </textarea>
 
 <p>Key Output: <span id="newmusickey"></span></p>
