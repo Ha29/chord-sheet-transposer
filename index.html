@@ -8,8 +8,8 @@ function set_output() {
 //create input for key of song
 
 //create notes array
-notes_array = 'C Db D Eb E F Gb G Ab A Bb B'.split(' ')
-notes_dict = {}
+var notes_array = 'C Db D Eb E F Gb G Ab A Bb B'.split(' ')
+var notes_dict = {}
 notes_array.forEach((note, idx) => {
   notes_dict[idx] = note
   notes_dict[note] = idx
@@ -20,6 +20,8 @@ notes_dict['F#'] = 6
 notes_dict['G#'] = 8
 notes_dict['A#'] = 10
 console.log(notes_dict)
+
+var transpose_num = document.getElementById('transpose_num').value % 12
     
 //make new key and determine if flats or sharps are used 
 
@@ -37,13 +39,13 @@ console.log(notes_dict)
 <h1>Put music in textbox</h1>
 <form onsubmit="return set_output()">
   <label for="tranpose_num">Transpose By How Much (Positive):</label>
-  <input type="number" id="transpose_num" name="transpose_num"><br><br>
+  <input type="number" id="transpose_num" name="transpose_num" required><br><br>
     
   <label for="musickey">Music Key:</label>
   <input type="text" id="musickey" name="musickey"><br><br>
 
   <label for="musicinput">Song To Transcribe:</label>
-  <textarea id="musicinput" rows"7" cols="50"></textarea>
+  <textarea id="musicinput" rows=7 cols=50></textarea>
   <input type="submit" value="Submit">
 </form>
 
