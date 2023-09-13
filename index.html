@@ -1,7 +1,7 @@
 <script>
 function doSomething() {
     alert('Form submitted!');
-    console.log('working!');
+    document.getElementById('outputp').innerHTML = document.getElementById('musicinput').innerHTML
     return false;
 }
 </script>
@@ -11,3 +11,7 @@ function doSomething() {
   <textarea id="musicinput" rows"4" cols="50"></textarea>
   <input type="submit" value="Submit">
 </form>
+
+<p id="outputp">
+    Output: 
+</p>
