@@ -1,6 +1,6 @@
 Use the github page and place your chords here directly from the browser:
 
-https://ha29.github.io/python-music-transcriber/
+https://ha29.github.io/chord-sheet-transposer/
 
 # python-music-transciber
 basic python script to transcribe music
