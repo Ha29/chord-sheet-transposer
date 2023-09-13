@@ -1,4 +1,4 @@
-transpose_num = input("Transpose by how much? (positive number), 11 is -1, 10 is -2, etc.")
+transpose_num = input("Transpose by how much? (positive number), 11 is -1, 10 is -2, etc.:\n")
 if not transpose_num.isnumeric():
   raise Exception("Need positive numeric input")
 # Using readlines()
