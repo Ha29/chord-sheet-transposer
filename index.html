@@ -22,6 +22,11 @@ function set_output() {
 
 <h1>Put music in textbox</h1>
 <form onsubmit="return doSomething()">
+  <label for="tranpose_num">Transpose By How Much (Positive):</label>
+  <input type="number" id="transpose_num" name="transpose_num"><br><br>
+    
+  <label for="musickey">Music Key:</label>
+  <input type="text" id="musickey" name="musickey"><br><br>
   <textarea id="musicinput" rows"4" cols="50"></textarea>
   <input type="submit" value="Submit">
 </form>
