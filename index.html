@@ -23,7 +23,7 @@
       
       //make new key and determine if flats or sharps are used 
       var music_key = document.getElementById('musickey').value
-      if (!(curr_key in notes_dict)) {
+      if (!(music_key in notes_dict)) {
           music_key = 'C'
       }
       var new_transpose_key = notes_dict[music_key] + transpose_num
@@ -43,21 +43,27 @@
           switch (note) {
               case 'Db':
                   return 'C#'
+                  break
               case 'Eb':
                   return 'D#'
+                  break
               case 'Gb':
                   return 'F#'
+                  break
               case 'Ab':
                   return 'G#'
+                  break
               case 'Bb':
                   return 'A#'
+                  break
               default:
                   return note
+          }
       }
       return note
   }
       
-  //make valid chord function
+  // //make valid chord function
   function valid_chord(chord) {
       return chord.length >= 1 && chord[0] in notes_dict
   }
@@ -76,11 +82,14 @@
               has_sharp_flat = true
           }
           let note_idx = notes_dict[chord_note]
-          if (!note_idx) {
+          console.log('noteidx: ', note_idx)
+          if (note_idx == undefined) {
               return chord
           }
           note_idx = (note_idx + transpose_num) % 12
+          console.log('new idx: ', note_idx)
           let new_note = get_correct_sharp_flat_note(notes_dict[note_idx], use_flat)
+          console.log('new_note: ', new_note, 'vs. ', chord)
           if (has_sharp_flat) {
               new_note += chord.slice(2, chord.length)
           } else {
@@ -96,40 +105,88 @@
       let processed_line = ''
       let curr_line = line.split(' ')
       for (let chord of curr_line) {
-          processed_line += process_chord(chord)
+          processed_line += process_chord(chord, transpose_num, use_flat)
       }
+      console.log('processedline: ', processed_line)
       return processed_line
   }
+
+  function process_slashes(line, transpose_num, use_flat) {
+    let processed_line = ''
+    let idx = 0
+    while (idx < line.length) {
+      let char = line[idx]
+      if (char == '/' && idx + 1 <= line.length - 1 && line[idx + 1] in notes_dict) {
+          let note_idx = notes_dict[line[idx + 1]]
+          if (idx + 2 <= line.length - 1 && ['b', '#'].includes(line[idx + 2])) {
+            note_idx += line[idx + 2]
+            idx += 1
+          }
+          note_idx = (note_idx + transpose_num) % 12
+          processed_line += '/' + get_correct_sharp_flat_note(notes_dict[note_idx])
+          idx += 2
+          continue
+      }
+      processed_line += char 
+      idx += 1
+    }
+    return processed_line
+  }
   
-  //transcribe main chords function
+  // //transcribe main chords function
   function find_main_chord(lines, transpose_num, use_flat) {
       var new_lines = []
       for (let line of lines) {
           let transcribed_line = ''
           if (line.includes('|')) {
-              transcribed_line += process_line(line)
-              new_lines += [transcribed_line]
+              transcribed_line += process_line(line, transpose_num, use_flat)
+              new_lines += [transcribed_line + "\n"]
           } else {
-              new_lines += [line]
+              new_lines += [line + "\n"]
           }
       }
       return new_lines
   }
       
-  //transcribe slash chords function
+  // //transcribe slash chords function
   function find_slash_notes(lines, transpose_num, use_flat) {
+    var new_lines = []
+    for (let line of lines) {
+      console.log("LINE: ", line.length)
+      let transcribed_line = ''
+      if (line.includes('|')) {
+        transcribed_line += process_slashes(line, transpose_num, use_flat)
+        console.log('transcribed: ', transcribed_line)
+        new_lines += [transcribed_line + "\n"]
+      } else {
+        new_lines += [line + "\n"]
+      }
+    }
+    return new_lines
   }
       
-  //set the output 
+  // //set the output 
   function set_output() {
-      var musicText = document.getElementById('outputp').innerHTML = document.getElementById('musicinput').value
-      var config  = getConfig()
+      var musicText = document.getElementById('musicinput').value
+      var config  = get_config()
       var newlines = find_main_chord(musicText.split("\n"), config['transpose_num'], config['use_flat'])
-      console.log(newlines)
+      newlines = find_slash_notes(newlines.split('\n'), config['transpose_num'], config['use_flat'])
+      document.getElementById('newmusickey').textContent = config['new_key']
+      console.log('newkey: ', config['new_key'])
+      // console.log(newlines)
+      document.getElementById('outputp').value = newlines
       return false;
   }
     
 //make a copy text button and function 
+    function copyOutput() {
+      var copyText = document.getElementById('outputp')
+      copyText.select();
+      copyText.setSelectionRange(0, 99999);
+
+      navigator.clipboard.writeText(copyText.value)
+      alert("Copied text!")
+    }
 </script>
 
 <h1>Put music in textbox</h1>
@@ -145,6 +202,10 @@
   <input type="submit" value="Submit">
 </form>
 
+<h1>Output:</h1>
 <textarea id="outputp" rows="7" cols="50">
-    Output: 
 </textarea>
+<button onclick="copyOutput()">Copy Output</button>
+
+<p>Key Output: <span id="newmusickey"></span></p>
+
