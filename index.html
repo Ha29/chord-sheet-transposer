@@ -2,22 +2,22 @@
 
 <h1>Put music in textbox</h1>
 <form onsubmit="return set_output()">
-  <label for="tranpose_num">Transpose By How Much (Positive):</label>
+  <label for="tranpose_num">Transpose By How Much (Positive):</label><br>
   <input type="number" id="transpose_num" name="transpose_num" required><br><br>
     
-  <label for="musickey">Original Music Key (default to C):</label>
+  <label for="musickey">Original Music Key (default to C):</label><br>
   <input type="text" id="musickey" name="musickey"><br><br>
 
-  <label for="delimiter">Delimiter Per Bar (seperates chords and defaults to | ):</label>
+  <label for="delimiter">Delimiter Per Bar (identifies lines with chords and seperates chords and defaults to | ):</label><br>
   <input type="text" id="delimiter" name="delimiter" maxlength="1"><br><br>
 
-  <label for="musicinput">Song To Transcribe:</label>
-  <textarea id="musicinput" rows=7 cols=50></textarea>
-  <input type="submit" value="Submit">
+  <label for="musicinput">Song To Transcribe:</label><br>
+  <textarea id="musicinput" rows=10 cols=60></textarea><br>
+  <input type="submit" value="Transcribe">
 </form>
 
 <h1>Output:</h1>
-<textarea id="outputp" rows="7" cols="50" hidden>
+<textarea id="outputp" rows="10" cols="60" disabled>
 </textarea>
 
 <p>Key Output: <span id="newmusickey"></span></p>
@@ -31,6 +31,8 @@
   //create input for key of song
 
   document.getElementById('delimiter').value = '|'
+
+  document.getElementById('musicinput').value = '| C/E              |      C     |\nHeart beats fast\n|    G     |     G    |\nColors and promises'
   
   //create notes array
   var notes_array = 'C Db D Eb E F Gb G Ab A Bb B'.split(' ')
@@ -65,7 +67,7 @@
       if (new_key.includes('b') || new_key == 'F') {
           use_flat = true
       }
-      return {transpose_num, music_key, new_key, use_flat}
+      return {transpose_num, music_key, new_key, use_flat, delimiter}
   }
       
   function get_correct_sharp_flat_note(note, use_flat=false) {
@@ -104,7 +106,7 @@
   function process_chord(chord, transpose_num, use_flat, delimiter='|') {
       if (chord == '') {
           return ' '
-      } else if (chord == delimiter || !valid_chord(chord)) {
+      } else if (chord == delimiter || !valid_chord(chord, delimiter)) {
           return chord + ' '
       }
       var has_sharp_flat = false
@@ -113,6 +115,9 @@
         has_delimiter = true
       }
       if (chord.length >= 1) {
+          if (has_delimiter) {
+            chord = chord.slice(1)
+          }
           let chord_note = chord[0]
           if (chord.length > 1 && (chord[1] == '#' || chord[1] == 'b')) {
               chord_note += chord[1]
@@ -212,7 +217,7 @@
       var config  = get_config()
       console.log('config: ', config)
       var newlines = find_main_chord(musicText.split("\n"), config['transpose_num'], config['use_flat'], config['delimiter'])
-      newlines = find_slash_notes(newlines.split('\n'), config['transpose_num'], config['use_flat'])
+      newlines = find_slash_notes(newlines.split('\n'), config['transpose_num'], config['use_flat'], config['delimiter'])
       document.getElementById('newmusickey').textContent = config['new_key']
       console.log('newkey: ', config['new_key'])
       // console.log(newlines)
