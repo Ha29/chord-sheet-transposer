@@ -3,6 +3,8 @@
 
   //create numeric input for transposing by how much 
   //create input for key of song
+
+  document.getElementById('delimiter').value = '|'
   
   //create notes array
   var notes_array = 'C Db D Eb E F Gb G Ab A Bb B'.split(' ')
@@ -22,6 +24,11 @@
       var transpose_num = parseInt(document.getElementById('transpose_num').value) % 12
       
       //make new key and determine if flats or sharps are used 
+      var delimiter = document.getElementById('delimiter').value
+      if (delimiter == '') {
+        delimiter = '|'
+      }
+    
       var music_key = document.getElementById('musickey').value
       if (!(music_key in notes_dict)) {
           music_key = 'C'
@@ -64,17 +71,21 @@
   }
       
   // //make valid chord function
-  function valid_chord(chord) {
-      return chord.length >= 1 && chord[0] in notes_dict
+  function valid_chord(chord, delimiter='|') {
+      return chord.length >= 1 && (chord[0] in notes_dict || (chord[0] == delimiter && chord[1] in notes_dict)) 
   }
   
-  function process_chord(chord, transpose_num, use_flat) {
+  function process_chord(chord, transpose_num, use_flat, delimiter='|') {
       if (chord == '') {
           return ' '
-      } else if (chord == '|' || !valid_chord(chord)) {
+      } else if (chord == delimiter || !valid_chord(chord)) {
           return chord + ' '
       }
-      has_sharp_flat = false
+      var has_sharp_flat = false
+      var has_delimiter = false
+      if (chord[0] == delimiter) {
+        has_delimiter = true
+      }
       if (chord.length >= 1) {
           let chord_note = chord[0]
           if (chord.length > 1 && (chord[1] == '#' || chord[1] == 'b')) {
@@ -89,11 +100,14 @@
           note_idx = (note_idx + transpose_num) % 12
           console.log('new idx: ', note_idx)
           let new_note = get_correct_sharp_flat_note(notes_dict[note_idx], use_flat)
-          console.log('new_note: ', new_note, 'vs. ', chord)
+          // console.log('new_note: ', new_note, 'vs. ', chord)
           if (has_sharp_flat) {
               new_note += chord.slice(2, chord.length)
           } else {
               new_note += chord.slice(1, chord.length)
+          }
+          if (has_delimiter) {
+            new_note = delimiter + new_note
           }
           return new_note
       } else {
@@ -101,17 +115,17 @@
       }
   }
       
-  function process_line(line, transpose_num, use_flat) {
+  function process_line(line, transpose_num, use_flat, delimiter='|') {
       let processed_line = ''
       let curr_line = line.split(' ')
       for (let chord of curr_line) {
-          processed_line += process_chord(chord, transpose_num, use_flat)
+          processed_line += process_chord(chord, transpose_num, use_flat, delimiter)
       }
       console.log('processedline: ', processed_line)
       return processed_line
   }
 
-  function process_slashes(line, transpose_num, use_flat) {
+  function process_slashes(line, transpose_num, use_flat, delimiter='|') {
     let processed_line = ''
     let idx = 0
     while (idx < line.length) {
@@ -135,12 +149,12 @@
   }
   
   // //transcribe main chords function
-  function find_main_chord(lines, transpose_num, use_flat) {
+  function find_main_chord(lines, transpose_num, use_flat, delimiter='|') {
       var new_lines = []
       for (let line of lines) {
           let transcribed_line = ''
-          if (line.includes('|')) {
-              transcribed_line += process_line(line, transpose_num, use_flat)
+          if (line.includes(delimiter)) {
+              transcribed_line += process_line(line, transpose_num, use_flat, delimiter)
               new_lines += [transcribed_line + "\n"]
           } else {
               new_lines += [line + "\n"]
@@ -150,13 +164,13 @@
   }
       
   // //transcribe slash chords function
-  function find_slash_notes(lines, transpose_num, use_flat) {
+  function find_slash_notes(lines, transpose_num, use_flat, delimiter='|') {
     var new_lines = []
     for (let line of lines) {
       console.log("LINE: ", line.length)
       let transcribed_line = ''
-      if (line.includes('|')) {
-        transcribed_line += process_slashes(line, transpose_num, use_flat)
+      if (line.includes(delimiter)) {
+        transcribed_line += process_slashes(line, transpose_num, use_flat, delimiter)
         console.log('transcribed: ', transcribed_line)
         new_lines += [transcribed_line + "\n"]
       } else {
@@ -171,7 +185,7 @@
       var musicText = document.getElementById('musicinput').value
       var config  = get_config()
       console.log('config: ', config)
-      var newlines = find_main_chord(musicText.split("\n"), config['transpose_num'], config['use_flat'])
+      var newlines = find_main_chord(musicText.split("\n"), config['transpose_num'], config['use_flat'], config['delimiter'])
       newlines = find_slash_notes(newlines.split('\n'), config['transpose_num'], config['use_flat'])
       document.getElementById('newmusickey').textContent = config['new_key']
       console.log('newkey: ', config['new_key'])
@@ -199,6 +213,9 @@
   <input type="number" id="transpose_num" name="transpose_num" required><br><br>
     
   <label for="musickey">Original Music Key (default to C):</label>
+  <input type="text" id="musickey" name="musickey"><br><br>
+
+  <label for="musickey">Delimiter Per Bar (seperates chords and defaults to | ):</label>
   <input type="text" id="musickey" name="musickey"><br><br>
 
   <label for="musicinput">Song To Transcribe:</label>
