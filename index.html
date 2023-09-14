@@ -1,7 +1,7 @@
 
 
 <h1>Chord Music Transposer</h1>
-<p>For each line with chords, add a delimiter of your choice to allow the code to identify which lines are chords and which lines are the lyrics. i.e. the file below has | as the delimiter in every chord line</p>
+<p>For each line with chords, add a delimiter of your choice to allow the code to identify which lines are chords and which lines are the lyrics. i.e. the file below has | as the delimiter in every chord line. Chords should be together with no spaces, i.e. Bbm7b9 Slash notation is supported, just make sure there's no space between the slash and the bass note. i.e Bb7b9/D# is good while Bb7b9/  D# is bad. The first one has no spaces making it correct. </p>
 <form onsubmit="return set_output()">
   <label for="tranpose_num">Transpose By How Much (Positive):</label><br>
   <input type="number" id="transpose_num" name="transpose_num" required><br><br>
