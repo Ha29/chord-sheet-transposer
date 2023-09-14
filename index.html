@@ -1,3 +1,29 @@
+
+
+<h1>Put music in textbox</h1>
+<form onsubmit="return set_output()">
+  <label for="tranpose_num">Transpose By How Much (Positive):</label>
+  <input type="number" id="transpose_num" name="transpose_num" required><br><br>
+    
+  <label for="musickey">Original Music Key (default to C):</label>
+  <input type="text" id="musickey" name="musickey"><br><br>
+
+  <label for="delimiter">Delimiter Per Bar (seperates chords and defaults to | ):</label>
+  <input type="text" id="delimiter" name="delimiter" maxlength="1"><br><br>
+
+  <label for="musicinput">Song To Transcribe:</label>
+  <textarea id="musicinput" rows=7 cols=50></textarea>
+  <input type="submit" value="Submit">
+</form>
+
+<h1>Output:</h1>
+<textarea id="outputp" rows="7" cols="50" hidden>
+</textarea>
+
+<p>Key Output: <span id="newmusickey"></span></p>
+
+<button onclick="copyOutput()">Copy Output</button>
+
 <script>
 
 
@@ -102,9 +128,9 @@
           let new_note = get_correct_sharp_flat_note(notes_dict[note_idx], use_flat)
           // console.log('new_note: ', new_note, 'vs. ', chord)
           if (has_sharp_flat) {
-              new_note += chord.slice(2, chord.length)
+              new_note += chord.slice(2, chord.length) + ' '
           } else {
-              new_note += chord.slice(1, chord.length)
+              new_note += chord.slice(1, chord.length) + ' '
           }
           if (has_delimiter) {
             new_note = delimiter + new_note
@@ -206,27 +232,3 @@
       alert("Copied text!")
     }
 </script>
-
-<h1>Put music in textbox</h1>
-<form onsubmit="return set_output()">
-  <label for="tranpose_num">Transpose By How Much (Positive):</label>
-  <input type="number" id="transpose_num" name="transpose_num" required><br><br>
-    
-  <label for="musickey">Original Music Key (default to C):</label>
-  <input type="text" id="musickey" name="musickey"><br><br>
-
-  <label for="musickey">Delimiter Per Bar (seperates chords and defaults to | ):</label>
-  <input type="text" id="musickey" name="musickey"><br><br>
-
-  <label for="musicinput">Song To Transcribe:</label>
-  <textarea id="musicinput" rows=7 cols=50></textarea>
-  <input type="submit" value="Submit">
-</form>
-
-<h1>Output:</h1>
-<textarea id="outputp" rows="7" cols="50" hidden>
-</textarea>
-
-<p>Key Output: <span id="newmusickey"></span></p>
-
-<button onclick="copyOutput()">Copy Output</button>
