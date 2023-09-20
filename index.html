@@ -63,7 +63,7 @@
       if (!(music_key in notes_dict)) {
           music_key = 'C'
       }
-      var new_transpose_key = notes_dict[music_key] + transpose_num
+      var new_transpose_key = (notes_dict[music_key] + transpose_num) % 12
       var new_key = notes_dict[new_transpose_key]
       console.log(new_key)
       var use_flat = false
