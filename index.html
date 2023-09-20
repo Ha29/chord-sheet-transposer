@@ -65,6 +65,7 @@
       }
       var new_transpose_key = notes_dict[music_key] + transpose_num
       var new_key = notes_dict[new_transpose_key]
+      console.log(new_key)
       var use_flat = false
       if (new_key.includes('b') || new_key == 'F') {
           use_flat = true
