@@ -219,7 +219,7 @@
       var musicText = document.getElementById('musicinput').value
       var config  = get_config()
       console.log('config: ', config)
-      var newlines = find_main_chord(musicText..replace(/\t/g, '').split("\n"), config['transpose_num'], config['use_flat'], config['delimiter'])
+      var newlines = find_main_chord(musicText.replace(/\t/g, '').split("\n"), config['transpose_num'], config['use_flat'], config['delimiter'])
       newlines = find_slash_notes(newlines.split('\n'), config['transpose_num'], config['use_flat'], config['delimiter'])
       document.getElementById('newmusickey').textContent = config['new_key']
       console.log('newkey: ', config['new_key'])
